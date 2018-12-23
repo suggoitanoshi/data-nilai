@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="index.js" defer></script>
+    <title>Grafik Data Nilai</title>
+    <style>
+      .nilai-in{
+        width: 3.5em;
+      }
+      .input_nilai{
+        display: inline-block;
+      }
+      .nilai input[type="text"]{
+        width: 5em;
+      }
+      .float-right{
+        float: right;
+      }
+      .input-table{
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      .input-table td, .input-table th{
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="graph" width=300 height=200></canvas>
+      <div>
+        <button v-on:click="tambahMapel">Tambah Mapel</button>
+        <button v-on:click="tambahSemester">Tambah Semester</button>
+        <button v-on:click="hapusSemester">Kurangi Semester</button>
+        <span>Semester sekarang: {{ jumlahSemester }}</span>
+        <span>Mapel Sekarang: {{ tabel.length }}</span>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th rowspan="2">Nama mapel</th>
+              <th v-bind:colspan="jumlahSemester" v-if="jumlahSemester > 0">Semester</th>
+              <th rowspan="2">Gambar sendiri</th>
+              <th rowspan="2">Hapus Mapel</th>
+            </tr>
+            <tr>
+              <td v-for="sem in jumlahSemester">{{ sem }}</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(kolom, baris) in tabel">
+              <td><input type="text" v-model="mapel[baris].nama" v-bind:tabindex="baris+1"></input></td>
+              <td v-for="(data, kolom) in kolom">
+                <input type="number" v-model.number="tabel[baris][kolom].teori"
+                class="nilai-in" v-bind:tabindex="mapel.length+kolom+1"
+                v-show="tabel[baris][kolom].adaTeori"></input>
+                <input type="checkbox" v-model="tabel[baris][kolom].adaTeori"
+                class="float-right teori-check"></input>
+                <br>
+                <input type="number" v-model.number="tabel[baris][kolom].praktek"
+                class="nilai-in" v-bind:tabindex="mapel.length+kolom+1"
+                v-show="tabel[baris][kolom].adaPraktek"></input>
+                <input type="checkbox" v-model="tabel[baris][kolom].adaPraktek"
+                class="float-right praktek-check"></input>
+              </td>
+              <td><input type="checkbox" v-model="mapel[baris].gambarSendiri"></input></td>
+              <td><button type="button" v-on:click="hapusMapel(baris)">X</button></td>
+            </tr>
+            <tr>
+              <td>Rata-rata</td>
+              <td v-for="sem in jumlahSemester">{{ hitungRerata(sem) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
