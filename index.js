@@ -9,7 +9,8 @@ let app = new Vue({
     jumlahSemester: 0,
     averages: [],
     colors: ["#1ab19c", "#d58317", "#f223b8", "#9e4edd", "#1ad4a2", "#4b7e8e"],
-    currentColor: ""
+    currentColor: "",
+    dataEkspor: ""
   },
   methods: {
     tambahMapel: function(){
@@ -117,6 +118,39 @@ let app = new Vue({
     },
     pilihWarna: function(){
       this.currentColor = this.colors[Math.floor(Math.random()*this.colors.length)];
+    },
+    ekspor: function(){
+      var penyimpanan = {
+        rerata: this.averages,
+        jumlahSemester: this.jumlahSemester,
+        nilai: []
+      };
+      this.mapel.forEach((mp, index) => {
+        penyimpanan.nilai[index] = {
+          nama: mp.nama,
+          semester: []
+        };
+        this.tabel[index].forEach((nilai, semester) => {
+          penyimpanan.nilai[index].semester[semester] = nilai;
+        });
+      });
+      var teksPenyimpanan = JSON.stringify(penyimpanan);
+      this.dataEkspor = LZString.compress(btoa(teksPenyimpanan));
+    },
+    impor: function(){
+      var data = this.dataEkspor;
+      var teksPenyimpanan = atob(LZString.decompress(data));
+      var penyimpanan = JSON.parse(teksPenyimpanan);
+      Object.keys(penyimpanan.nilai).forEach((index) => {
+        this.mapel.splice(index, 1, {
+          nama: penyimpanan.nilai[index].nama,
+          gambarSendiri: false,
+          warna: ""
+        });
+        this.tabel.splice(index, 1, penyimpanan.nilai[index].semester);
+      });
+      this.averages = penyimpanan.rerata;
+      this.jumlahSemester = penyimpanan.jumlahSemester;
     }
   }
 });

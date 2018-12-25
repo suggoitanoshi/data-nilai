@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="lz-string.js"></script>
     <script src="index.js" defer></script>
     <title>Grafik Data Nilai</title>
     <style>
@@ -37,6 +38,9 @@
         <button v-on:click="hapusSemester">Kurangi Semester</button>
         <span>Semester sekarang: {{ jumlahSemester }}</span>
         <span>Mapel Sekarang: {{ tabel.length }}</span>
+        <input type="text" v-model="dataEkspor"></input>
+        <button v-on:click="impor">Impor</button>
+        <button v-on:click="ekspor">Ekspor</button>
         <table class="input-table">
           <thead>
             <tr>
